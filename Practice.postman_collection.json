@@ -1,0 +1,495 @@
+{
+	"info": {
+		"_postman_id": "166addf8-8807-42ca-9153-7556946a2867",
+		"name": "Practice",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29136941"
+	},
+	"item": [
+		{
+			"name": "Chaining",
+			"item": [
+				{
+					"name": "New Request",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var random = Math.random().toString(36).substring(2)\r",
+									"var useremail = \"kim\"+random+\"@gmail.com\"\r",
+									"var username = \"kim\"+random\r",
+									"\r",
+									"pm.environment.set(\"env_name\",username)\r",
+									"pm.environment.set(\"env_mail\",useremail)\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsondata = JSON.parse(responseBody)\r",
+									"\r",
+									"pm.environment.set(\"res_email\",jsondata.email);\r",
+									"pm.environment.set(\"res_id\",jsondata.id);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"name\": \"{{env_name}}\",\r\n        \"gender\": \"male\",\r\n        \"email\": \"{{env_mail}}\",\r\n        \"status\": \"inactive\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"get response\",() => {\r",
+									"    var jsondata = pm.response.json()\r",
+									"    var id = pm.environment.get(\"res_id\");\r",
+									"    var email = pm.environment.get(\"res_email\");\r",
+									"    pm.expect(jsondata.id).to.eql(id)\r",
+									"    pm.expect(jsondata.email).to.eql(email)\r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users/{{res_id}}",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								"{{res_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"after put\",() => {\r",
+									"    var jsondata = pm.response.json()\r",
+									"    var put_n = pm.environment.get(\"put_name\");\r",
+									"    var put_e = pm.environment.get(\"put_email\");\r",
+									"    pm.expect(jsondata.name).to.eql(put_n);\r",
+									"    pm.expect(jsondata.email).to.eql(put_e);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var random = Math.random().toString(36).substring(2)\r",
+									"\r",
+									"var p_email = \"kem\"+random+\"@gmail.com\";\r",
+									"var p_name = \"kem\"+random;\r",
+									"\r",
+									"pm.environment.set(\"put_name\",p_name);\r",
+									"pm.environment.set(\"put_email\",p_email);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"name\": \"{{put_name}}\",\r\n        \"email\": \"{{put_email}}\",\r\n        \"status\": \"active\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users/{{res_id}}",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								"{{res_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.unset(\"res_email\")\r",
+									"pm.environment.unset(\"res_id\")\r",
+									"pm.environment.unset(\"put_name\")\r",
+									"pm.environment.unset(\"put_email\")"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://gorest.co.in/public/v2/users/{{res_id}}",
+							"protocol": "https",
+							"host": [
+								"gorest",
+								"co",
+								"in"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								"{{res_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "896d49d3df204824cdd13709bf2de0771d8877565c899c491038b6ea1e75bd8d",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "get",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"status code is 200\" , () => {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})\r",
+							"pm.test(\"status code be in either\",() => {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201])\r",
+							"})\r",
+							"pm.test(\"content type header\" , () => {\r",
+							"    pm.response.to.have.header(\"Content-type\")\r",
+							"})\r",
+							"pm.test(\"value test\" , () => {\r",
+							"    pm.expect(pm.response.headers.get('Content-type')).to.be.eql(\"application/json\")\r",
+							"});\r",
+							"pm.test(\"cookies test\",() => {\r",
+							"    pm.expect(pm.cookies.has(\"language\"))\r",
+							"})\r",
+							"pm.test(\"response time\",()=> {\r",
+							"    pm.expect(pm.response.responseTime).is.below(10)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/students",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"students"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Array properties",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const student_data = pm.response.json();\r",
+							"\r",
+							"pm.test(\"array properties\" ,() => {\r",
+							"     const std = student_data[0];\r",
+							"     pm.expect(std.name).to.be.eql(\"emma\");\r",
+							"     pm.expect(std.courses).to.be.eql([\"robot\"])\r",
+							"     const ex_crs = [\"robot\",\"selenium\"]\r",
+							"     const has_ex_crs = std.courses.some(course => ex_crs.includes(course))\r",
+							"     pm.expect(has_ex_crs).to.be.true;\r",
+							"\r",
+							"\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/students",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"students"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deleting_all_variables",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.clear()"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://postman-echo.com/get",
+					"protocol": "https",
+					"host": [
+						"postman-echo",
+						"com"
+					],
+					"path": [
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "special-key",
+							"type": "string"
+						},
+						{
+							"key": "in",
+							"value": "query",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "api_token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://petstore.swagger.io/v2/pet",
+					"protocol": "https",
+					"host": [
+						"petstore",
+						"swagger",
+						"io"
+					],
+					"path": [
+						"v2",
+						"pet"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
